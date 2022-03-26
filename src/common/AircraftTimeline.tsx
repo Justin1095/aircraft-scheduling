@@ -13,6 +13,7 @@ const AircraftTimeline = ({ rotationData }: Props) => {
 	const turnaroundColor = "#800080";
 	const [timelineFights, setTimelineFights] = useState<TimelineFights[]>([]);
 
+	// Used to find the width for sections in my timeline
 	const getWidth = (date1: number, date2: number = 0) => {
 		const getDiffer = Math.abs(date1 - date2);
 		const getPercentage = (getDiffer / secondsInTheDay) * 100;
@@ -25,6 +26,7 @@ const AircraftTimeline = ({ rotationData }: Props) => {
 		const timeArray = Array<TimelineFights>();
 
 		rotationData.forEach((flight, i) => {
+			// Plan - use get width to find what parts of my timeline need different colors
 			setTimelineFights(timeArray);
 		});
 	};
