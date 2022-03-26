@@ -24,11 +24,11 @@ const DateHeader = ({ date }: Props) => {
 		day
 	)} ${month} ${date.getFullYear()} `;
 	return (
-		<h2 className="date-header">
+		<h3 className="date-header">
 			<span style={{ cursor: "pointer" }}>&lt;</span>
 			<span>{dateFormatted}</span>
 			<span style={{ cursor: "pointer" }}>&gt;</span>
-		</h2>
+		</h3>
 	);
 };
 

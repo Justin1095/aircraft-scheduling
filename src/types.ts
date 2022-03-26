@@ -30,3 +30,8 @@ export interface ReponseFlightData {
 	pagination: Pagination;
 	data: FlightData[];
 }
+
+export interface TimelineFights {
+	width: string;
+	color: string;
+}

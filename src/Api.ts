@@ -6,7 +6,6 @@ export const fetchAircraftData = () => {
 			}
 		})
 		.catch((error) => {
-			console.log(error);
 			throw error;
 		});
 };
@@ -19,7 +18,6 @@ export const fetchFlightData = () => {
 			}
 		})
 		.catch((error) => {
-			console.log(error);
 			throw error;
 		});
 };
