@@ -1,32 +1,52 @@
 import { useEffect, useState } from "react";
 import { FlightData, TimelineFights } from "../types";
+import {
+	getTimeWidth,
+	secondsInTheDay,
+	turnaroundTime,
+} from "../helper/usefulExports";
 
 interface Props {
 	rotationData: FlightData[];
+	selectedAircraftId: string;
 }
 
-const AircraftTimeline = ({ rotationData }: Props) => {
-	const secondsInTheDay = 86400;
-	const turnaround = 1440;
-	const idleColor = "#EFEFEF";
+const AircraftTimeline = ({ rotationData, selectedAircraftId }: Props) => {
+	const idleColor = "#D3D3D3";
 	const scheduledColor = "#008000";
 	const turnaroundColor = "#800080";
 	const [timelineFights, setTimelineFights] = useState<TimelineFights[]>([]);
 
-	// Used to find the width for sections in my timeline
-	const getWidth = (date1: number, date2: number = 0) => {
-		const getDiffer = Math.abs(date1 - date2);
-		const getPercentage = (getDiffer / secondsInTheDay) * 100;
-		return `${getPercentage}%`;
-	};
-
-	// wip
+	// finds the widths and colors for idle time, scheduled time and turnaround time
 	const timeline = (rotationData: FlightData[]) => {
 		let width;
 		const timeArray = Array<TimelineFights>();
 
 		rotationData.forEach((flight, i) => {
-			// Plan - use get width to find what parts of my timeline need different colors
+			// looks for the idle time in the beginning of the flight
+			width =
+				i === 0
+					? getTimeWidth(flight.departuretime)
+					: getTimeWidth(
+							rotationData[i - 1].arrivaltime + turnaroundTime,
+							flight.departuretime
+					  );
+			timeArray.push({ width: width, color: idleColor });
+
+			// gets our scheduled time flight
+			width = getTimeWidth(flight.departuretime, flight.arrivaltime);
+			timeArray.push({ width: width, color: scheduledColor });
+
+			// gets our turnaround time
+			width = getTimeWidth(turnaroundTime);
+			timeArray.push({ width: width, color: turnaroundColor });
+
+			// if at the end, this will fill the rest of the timeline with idle
+			if (i === rotationData.length - 1) {
+				width = getTimeWidth(flight.arrivaltime, secondsInTheDay);
+				timeArray.push({ width: width, color: idleColor });
+			}
+
 			setTimelineFights(timeArray);
 		});
 	};
@@ -52,6 +72,19 @@ const AircraftTimeline = ({ rotationData }: Props) => {
 						}}
 					/>
 				))}
+			</div>
+			<br />
+			<div className="timeline-desc">
+				This timeline displays all selected flights in the rotation for
+				aircraft: {selectedAircraftId}
+				<br />
+				<span style={{ color: scheduledColor }}>Green</span> displays Scheduled
+				flights.
+				<br />
+				<span style={{ color: turnaroundColor }}>Purple</span> displays
+				Turnaround time.
+				<br />
+				Gray displays time when the aircraft is idle.
 			</div>
 		</div>
 	);

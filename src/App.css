@@ -16,7 +16,7 @@
 	margin: 10px 0;
 	border: solid 1px #000000;
 	cursor: pointer;
-	background-color: #EFEFEF;
+	background-color: #efefef;
 }
 
 .lg-pod {
@@ -31,6 +31,10 @@
 .time-section {
 	display: flex;
 	justify-content: space-between;
+}
+
+.timeline-desc {
+	font-size: 15px;
 }
 
 /* .sm-pod:nth-child(even) {
