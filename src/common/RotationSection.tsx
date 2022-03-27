@@ -1,25 +1,39 @@
 import { FlightData } from "../types";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRightLong } from "@fortawesome/free-solid-svg-icons";
 interface Props {
+	index: number;
 	flight: FlightData;
-	removeFightToRotation: (flight: FlightData) => void;
+	removeLastFightInRotation: (flight: FlightData) => void;
+	rotationDataLength: number;
 }
 
-const RotationSection = ({ flight, removeFightToRotation }: Props) => {
+const RotationSection = ({
+	index,
+	flight,
+	removeLastFightInRotation,
+	rotationDataLength,
+}: Props) => {
 	return (
-		<div className="lg-pod" onClick={() => removeFightToRotation(flight)}>
+		<div
+			className={`lg-pod ${index === rotationDataLength - 1 && "add-pointer"}`}
+			onClick={() => removeLastFightInRotation(flight)}
+		>
 			<div className="container">
 				<div className="row">
-					<div className="col-12">Flight: {flight.id}</div>
+					<div className="col-4">Flight: {flight.id}</div>
 				</div>
-				{/* <i className="fa-solid fa-right"></i> */}
+				<br />
 				<div className="row">
-					<div className="col-6">
+					<div className="col-4">
 						{flight.origin}
 						<br />
 						{flight.readable_departure}
 					</div>
-					<div className="col-6">
+					<div className="col-4">
+						<FontAwesomeIcon icon={faArrowRightLong} size="3x" />
+					</div>
+					<div className="col-4">
 						{flight.destination}
 						<br />
 						{flight.readable_arrival}

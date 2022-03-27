@@ -76,7 +76,7 @@ const AircraftTimeline = ({ rotationData, selectedAircraftId }: Props) => {
 			<br />
 			<div className="timeline-desc">
 				This timeline displays all selected flights in the rotation for
-				aircraft: {selectedAircraftId}
+				aircraft: {selectedAircraftId}.
 				<br />
 				<span style={{ color: scheduledColor }}>Green</span> displays Scheduled
 				flights.

@@ -11,6 +11,7 @@ interface Props {
 }
 
 const Aircrafts = ({ aircraft, rotationData, handleSelectAircaft }: Props) => {
+	// finds aircraft's utilisation in percent
 	const getUtilisation = (rotationData: FlightData[]) => {
 		const usage = rotationData.reduce(
 			(sum, flight) => sum + (flight.arrivaltime - flight.departuretime),
@@ -22,7 +23,7 @@ const Aircrafts = ({ aircraft, rotationData, handleSelectAircaft }: Props) => {
 	return (
 		<div className="sm-pod" onClick={() => handleSelectAircaft(aircraft)}>
 			<div>{aircraft.ident}</div>
-			<div>{getUtilisation(rotationData)}</div>
+			<div>({getUtilisation(rotationData)})</div>
 		</div>
 	);
 };

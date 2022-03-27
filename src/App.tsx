@@ -6,34 +6,13 @@ import AircraftTimeline from "./common/AircraftTimeline";
 import DateHeader from "./common/DateHeader";
 import FlightSection from "./common/FlightSection";
 import RotationSection from "./common/RotationSection";
+import { turnaroundTime } from "./helper/usefulExports";
 import {
 	AircraftData,
 	FlightData,
 	ReponseAircraftData,
 	ReponseFlightData,
 } from "./types";
-
-/*
-	Need to do:
-		- styling (Fixed rotation)
-	- remove rotation buttons 
-		- need to update my assumptions
-		- comments
-
-	Asumpitions:
-	- The date on the header will display tomorrow's date because the assessment description states, "Only one day worth of schedule can be entered (“tomorrow”)."
-	- Page will initally load with only the Aircrafts. Once an aircraft is selected, then the Flights will display.
-	- Rotation and Timeline will display once a Flight is selected. 
-	- Timeline has a description expaining it.
-	- When clicking on an aircraft, it resets the Rotation and Flights.
-	- The FLights are sorted by departure time
-	- the arrows in the header date should move the day back or forward (I did not add the functionality in)
-
-	Future Plans: 
-	- add jest unit testing
-	- add functionality to the date header arrows 
-	- make the page be more visually pleasing
-*/
 
 function App() {
 	const currentDate = new Date();
@@ -45,6 +24,7 @@ function App() {
 	const [rotationData, setRotationData] = useState<FlightData[]>([]);
 	const [selectedAircraft, setSelectedAircraft] = useState<AircraftData>();
 
+	// fetches aircraft and flight data
 	useEffect(() => {
 		fetchAircraftData().then((response: ReponseAircraftData) => {
 			if (!response) return;
@@ -66,41 +46,46 @@ function App() {
 		setFlightData(savedFlightData);
 	};
 
-	// Figured it would be best to sort by departure time
+	// sort flights by departure time
 	const sortedFlights = useMemo(
 		() => flightData.sort((f1, f2) => f1.departuretime - f2.departuretime),
 		[flightData]
 	);
-	const addFightToRotation = (selectFlight: FlightData) => {
-		const newRotationData = [...rotationData, selectFlight];
+	const addFightToRotation = (selectedFlight: FlightData) => {
+		const newRotationData = [...rotationData, selectedFlight];
 		setRotationData(newRotationData);
 
 		const fliterFights = savedFlightData.filter(
 			(flight) =>
-				flight.id !== selectFlight.id &&
-				flight.origin === selectFlight.destination &&
-				flight.departuretime >= selectFlight.arrivaltime + 1200
+				flight.id !== selectedFlight.id &&
+				flight.origin === selectedFlight.destination &&
+				flight.departuretime >= selectedFlight.arrivaltime + turnaroundTime
 		);
 		setFlightData(fliterFights);
 	};
 
-	// wip
-	const removeFightToRotation = (selectFlight: FlightData) => {
-		console.log("test");
-		// const newRotationData = rotationData.filter(
-		// 	(flight) => flight.id === selectFlight.id
-		// );
-		// setRotationData(newRotationData);
-		// setFlightData([]);
-		// // const test  = [..., selectFlight];
+	// removes last flight in rotation
+	const removeLastFightInRotation = (selectedFlight: FlightData) => {
+		if (rotationData[rotationData.length - 1].id === selectedFlight.id) {
+			const newRotationData = rotationData.filter(
+				(flight) => flight.id !== selectedFlight.id
+			);
+			setRotationData(newRotationData);
 
-		// // const fliterFights = flightData.filter(
-		// // 	(flight) =>
-		// // 		flight.id !== selectFlight.id &&
-		// // 		flight.origin === selectFlight.destination &&
-		// // 		flight.departuretime >= selectFlight.arrivaltime + 1200
-		// // );
-		// // setFlightData(fliterFights);
+			if (rotationData.length - 1 === 0) {
+				setFlightData(savedFlightData);
+			} else {
+				const preSelectedFlight = rotationData[rotationData.length - 2];
+				const fliterFights = savedFlightData.filter(
+					(flight) =>
+						flight.id !== preSelectedFlight.id &&
+						flight.origin === preSelectedFlight.destination &&
+						flight.departuretime >=
+							preSelectedFlight.arrivaltime + turnaroundTime
+				);
+				setFlightData(fliterFights);
+			}
+		}
 	};
 
 	const displayTimeLine = selectedAircraft && rotationData.length !== 0;
@@ -128,31 +113,41 @@ function App() {
 						<div>Rotation {selectedAircraft?.ident}</div>
 						<hr />
 						{selectedAircraft &&
-							rotationData?.map((flight, index) => (
+							rotationData?.map((flight, i) => (
 								<RotationSection
-									key={index}
+									key={i}
+									index={i}
 									flight={flight}
-									removeFightToRotation={removeFightToRotation}
+									removeLastFightInRotation={removeLastFightInRotation}
+									rotationDataLength={rotationData.length}
 								/>
 							))}
-						{displayTimeLine && (
+						{displayTimeLine ? (
 							<AircraftTimeline
 								rotationData={rotationData}
 								selectedAircraftId={selectedAircraft?.ident}
 							/>
+						) : (
+							<div>
+								Please select an Aircraft and Flights in order to see the
+								Rotation Flights.
+							</div>
 						)}
 					</div>
 					<div className="col-3">
 						<div>Flights</div>
 						<hr />
-						{selectedAircraft &&
+						{selectedAircraft ? (
 							sortedFlights?.map((flight) => (
 								<FlightSection
 									key={flight.id}
 									flight={flight}
 									addFightToRotation={addFightToRotation}
 								/>
-							))}
+							))
+						) : (
+							<div>Please select an Aircraft in order to see Flights.</div>
+						)}
 					</div>
 				</div>
 			</div>

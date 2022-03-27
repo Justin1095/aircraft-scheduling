@@ -4,8 +4,6 @@
 }
 
 .date-header {
-	/* text-align: center; */
-	/* font-size: 24px; */
 	padding-bottom: 30px;
 	padding-top: 30px;
 }
@@ -15,12 +13,17 @@
 	padding: 20px;
 	margin: 10px 0;
 	border: solid 1px #000000;
-	cursor: pointer;
 	background-color: #efefef;
+}
+
+.sm-pod,
+.add-pointer {
+	cursor: pointer;
 }
 
 .lg-pod {
 	background-color: white;
+	text-align: none;
 }
 
 .timeline {
@@ -36,7 +39,3 @@
 .timeline-desc {
 	font-size: 15px;
 }
-
-/* .sm-pod:nth-child(even) {
-	background: lightgray;
-} */
