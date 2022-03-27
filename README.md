@@ -9,10 +9,10 @@ This project is an application that does aircraft scheduling.
 - Rotation and Timeline will display once a Flight is selected.
 - Timeline has a description explaining it.
 - When clicking on an aircraft, it resets the Rotation and Flights.
-- The Flights are sorted by departure time
-- The arrows in the header date should move the date back or forward (I did not add the functionality in)
-- When user clicks on the last Rotation Flight, it will remove it from the Rotation and update the Flights
-- Descriptions will be displayed under the section telling the user how to use the application
+- The Flights are sorted by departure time.
+- The arrows in the header date should move the date back or forward (I did not add the functionality in).
+- If user clicks on the last Rotation Flight, it will remove it from the Rotation and update the Flights.
+- Descriptions will be displayed under the section telling the user how to use the application.
 
 ## Future Plans
 
